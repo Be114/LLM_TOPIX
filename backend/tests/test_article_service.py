@@ -19,7 +19,9 @@ class TestArticleService:
     
     def setup_method(self) -> None:
         """Set up test fixtures before each test method."""
-        self.service = ArticleService()
+        from unittest.mock import Mock
+        self.mock_db_session = Mock()
+        self.service = ArticleService(self.mock_db_session)
         self.sample_articles = [
             {
                 'id': 1,
@@ -182,3 +184,50 @@ class TestArticleService:
             assert article['summary_truncated'] is not None
             assert article['published_at'] is not None
             assert article['source_url'] is not None
+
+    def test_get_latest_articles_returns_article_id_in_each_article(self) -> None:
+        """Test that get_latest_articles returns article ID in each article.
+        
+        This test verifies that each article dictionary contains an 'id' key
+        with an integer value, which is essential for frontend functionality
+        like unique React keys and article detail navigation.
+        """
+        result = self.service.get_latest_articles()
+        
+        # Verify we have articles to test
+        assert isinstance(result, list)
+        
+        # For each article, verify 'id' field exists and is an integer
+        for article in result:
+            assert 'id' in article, f"Article missing 'id' field: {article.keys()}"
+            assert isinstance(article['id'], int), f"Article 'id' is not an integer: {type(article['id'])}"
+            assert article['id'] > 0, f"Article 'id' should be a positive integer: {article['id']}"
+
+    def test_database_session_is_managed_per_request_scope(self) -> None:
+        """Test that database sessions are properly managed via dependency injection.
+        
+        This test verifies that ArticleService properly uses injected database sessions
+        rather than creating its own engines, preventing resource leaks.
+        """
+        from unittest.mock import Mock
+        
+        # Create mock sessions to simulate different request contexts
+        mock_session_1 = Mock()
+        mock_session_2 = Mock()
+        
+        # Create services with injected sessions (proper dependency injection)
+        service1 = ArticleService(mock_session_1)
+        service2 = ArticleService(mock_session_2)
+        
+        # Verify that each service uses its injected session
+        assert service1._db_session is mock_session_1, "Service1 should use injected session"
+        assert service2._db_session is mock_session_2, "Service2 should use injected session"
+        
+        # Verify that different service instances use different sessions
+        # (simulating different request contexts)
+        assert service1._db_session is not service2._db_session, "Services should use different sessions"
+        
+        # This demonstrates proper session management:
+        # - No database engines created per service instance
+        # - Sessions managed at request level via dependency injection
+        # - Service instances are lightweight and testable

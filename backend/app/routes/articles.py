@@ -65,7 +65,9 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
         500: Internal server error
     """
     try:
-        article_service = ArticleService()
+        from app.config.database import get_db
+        db_session = get_db()
+        article_service = ArticleService(db_session)
         articles = article_service.get_latest_articles()
         
         formatted_articles = _format_articles_for_response(articles)
@@ -78,15 +80,15 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
     except DatabaseError as e:
         current_app.logger.error(f"Database error in get_latest_articles: {e.message}")
         return create_error_response(
-            'Database service unavailable',
-            'Please try again later',
+            'DATABASE_UNAVAILABLE',
+            'Database service is temporarily unavailable. Please try again later.',
             503
         )
         
     except ApplicationError as e:
         current_app.logger.error(f"Application error in get_latest_articles: {e.message}")
         return create_error_response(
-            'Internal server error',
+            'INTERNAL_SERVER_ERROR',
             'An unexpected error occurred',
             getattr(e, 'status_code', 500)
         )
@@ -94,7 +96,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
     except Exception as e:
         current_app.logger.error(f"Unexpected error in get_latest_articles: {str(e)}")
         return create_error_response(
-            'Internal server error',
+            'INTERNAL_SERVER_ERROR',
             'An unexpected error occurred',
             500
         )
@@ -104,7 +106,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
 def not_found_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 404 errors for articles blueprint."""
     return create_error_response(
-        'Endpoint not found',
+        'RESOURCE_NOT_FOUND',
         'The requested article endpoint does not exist',
         404
     )
@@ -114,7 +116,7 @@ def not_found_error(error: Exception) -> Tuple[Dict[str, str], int]:
 def method_not_allowed_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 405 errors for articles blueprint."""
     return create_error_response(
-        'Method not allowed',
+        'METHOD_NOT_ALLOWED',
         'This HTTP method is not allowed for this endpoint',
         405
     )

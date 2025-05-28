@@ -43,6 +43,7 @@ class ArticleFormatter:
         """
         try:
             return {
+                'id': article.id,
                 'title': article.title,
                 'summary_truncated': ArticleFormatter.truncate_summary(article.summary),
                 'published_at': article.published_at,
