@@ -5,22 +5,23 @@
 // Branded types for type safety
 export type ISO8601String = string & { readonly brand: unique symbol };
 export type URLString = string & { readonly brand: unique symbol };
+export type ArticleId = number & { readonly brand: unique symbol };
 
 export interface Article {
-  /** Unique identifier for the article (optional for new articles) */
-  id?: number;
+  /** Unique identifier for the article */
+  readonly id: ArticleId;
   
   /** Article title */
-  title: string;
+  readonly title: string;
   
   /** Article summary (may be truncated) */
-  summary_truncated: string;
+  readonly summary_truncated: string;
   
   /** Publication date and time in ISO 8601 format */
-  published_at: ISO8601String;
+  readonly published_at: ISO8601String;
   
   /** Source URL of the original article */
-  source_url: URLString;
+  readonly source_url: URLString;
   
   /** Optional full content of the article */
   content?: string;
@@ -73,8 +74,14 @@ export const isValidISO8601 = (dateString: string): dateString is ISO8601String 
   }
 };
 
+export const isValidArticleId = (id: number): id is ArticleId => {
+  return typeof id === 'number' && id > 0 && Number.isInteger(id);
+};
+
 export const validateArticle = (article: any): article is Article => {
   return (
+    typeof article.id === 'number' &&
+    isValidArticleId(article.id) &&
     typeof article.title === 'string' &&
     typeof article.summary_truncated === 'string' &&
     isValidISO8601(article.published_at) &&

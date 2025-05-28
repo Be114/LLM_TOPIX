@@ -9,11 +9,11 @@ from typing import Dict, Any, Tuple
 
 from app.services.article_service import ArticleService
 from app.exceptions import DatabaseError, ApplicationError
-from app.utils.response_helpers import (
+from app.utils import (
     create_error_response,
-    create_success_response
+    create_success_response,
+    format_datetime_to_utc_iso8601
 )
-from app.utils.date_helpers import format_datetime_to_utc_iso8601
 from app.config.constants import (
     ERROR_CODE_DATABASE_UNAVAILABLE,
     ERROR_CODE_INTERNAL_SERVER_ERROR,
