@@ -1,0 +1,1 @@
+"""LLM TOPIX Backend Application Factory."""
