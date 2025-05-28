@@ -10,7 +10,7 @@ from typing import Optional, Tuple, Dict, Any
 
 from app.routes.articles import articles_bp
 from app.config.constants import ALLOWED_ORIGINS, TESTING_ENV
-from app.config.database import get_database_url, get_test_database_url
+from app.config.database import get_database_url, get_test_database_url, init_db, close_db, dispose_db
 from app.utils.response_helpers import create_not_found_response, create_internal_error_response
 
 
@@ -31,6 +31,12 @@ def create_app(config_name: Optional[str] = None) -> Flask:
         app.config['DATABASE_URL'] = get_test_database_url()
     else:
         app.config['DATABASE_URL'] = get_database_url()
+    
+    # Initialize database with proper session management
+    init_db(app)
+    
+    # Register database teardown handler
+    app.teardown_appcontext(close_db)
     
     # Enable CORS for frontend integration
     CORS(app, resources={

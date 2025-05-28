@@ -5,16 +5,15 @@ article-related business operations including retrieval and formatting.
 """
 
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import time
 
-from sqlalchemy import create_engine, desc, select
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import desc, select
+from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.article import Article
 from app.exceptions import DatabaseError, ApplicationError
-from app.config.database import get_database_url
 from app.config.constants import PERFORMANCE_THRESHOLD_MS
 from app.services.formatters import ArticleFormatter
 
@@ -28,13 +27,14 @@ class ArticleService:
     from the database with proper error handling and performance optimization.
     """
     
-    def __init__(self) -> None:
-        """Initialize the ArticleService with database connection."""
-        try:
-            self.engine = create_engine(get_database_url())
-            self.SessionLocal = sessionmaker(bind=self.engine)
-        except Exception as e:
-            raise DatabaseError(f"Failed to initialize database connection: {str(e)}")
+    def __init__(self, db_session: Optional[Session] = None) -> None:
+        """Initialize the ArticleService with database session dependency injection.
+        
+        Args:
+            db_session: Database session to use for operations. If None, will 
+                       attempt to get session from Flask request context.
+        """
+        self._db_session = db_session
     
     def get_latest_articles(self) -> List[Dict[str, Any]]:
         """Retrieve the latest 5 articles from the database.
@@ -64,21 +64,38 @@ class ArticleService:
         except Exception as e:
             raise ApplicationError(f"Unexpected error in get_latest_articles: {str(e)}")
     
+    def _get_session(self) -> Session:
+        """Get database session for operations.
+        
+        Returns:
+            Session: Database session from injection or Flask context
+        """
+        if self._db_session is not None:
+            return self._db_session
+        
+        # Fall back to Flask request context if no session injected
+        try:
+            from app.config.database import get_db
+            return get_db()
+        except Exception as e:
+            raise DatabaseError(f"Unable to get database session: {str(e)}")
+    
     def _fetch_articles_from_database(self) -> List[Any]:
         """Fetch articles from database with proper query optimization.
         
         Returns:
             List of article database objects
         """
-        with self.SessionLocal() as session:
-            stmt = (
-                select(Article.title, Article.summary, Article.published_at, Article.source_url)
-                .order_by(desc(Article.published_at))
-                .limit(5)
-            )
-            
-            result = session.execute(stmt)
-            return result.fetchall()
+        session = self._get_session()
+        
+        stmt = (
+            select(Article.id, Article.title, Article.summary, Article.published_at, Article.source_url)
+            .order_by(desc(Article.published_at))
+            .limit(5)
+        )
+        
+        result = session.execute(stmt)
+        return result.fetchall()
     
     def _check_performance(self, start_time: float) -> None:
         """Check if operation completed within performance threshold.

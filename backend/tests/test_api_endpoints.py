@@ -54,21 +54,42 @@ class TestArticleAPI:
         data = json.loads(response.data)
         assert isinstance(data, list)
     
-    def test_get_latest_articles_success_response_format(self) -> None:
-        """Test the structure of successful API response.
+    def test_get_latest_articles_endpoint(self) -> None:
+        """Test the structure of successful API response according to CLAUDE.md format.
         
-        This test verifies that the API returns articles in the
-        expected format with all required fields.
+        This test verifies that the API returns articles in the CLAUDE.md compliant
+        structured response format: {"status": "success", "data": {"articles": [...], "count": N}}
+        and that each article contains all required fields including 'id'.
         """
         response = self.client.get('/api/articles/latest')
         
         if response.status_code == 200:
             data = json.loads(response.data)
-            assert isinstance(data, list)
             
-            for article in data:
-                required_keys = {'title', 'summary_truncated', 'published_at', 'source_url'}
-                assert set(article.keys()) == required_keys
+            # Verify top-level response structure per CLAUDE.md
+            assert 'status' in data, f"Response missing 'status' field: {data.keys()}"
+            assert data['status'] == 'success', f"Expected status 'success', got: {data['status']}"
+            
+            assert 'data' in data, f"Response missing 'data' field: {data.keys()}"
+            assert isinstance(data['data'], dict), f"'data' should be an object, got: {type(data['data'])}"
+            
+            # Verify data object structure
+            data_obj = data['data']
+            assert 'articles' in data_obj, f"Data object missing 'articles' field: {data_obj.keys()}"
+            assert isinstance(data_obj['articles'], list), f"'articles' should be a list, got: {type(data_obj['articles'])}"
+            
+            assert 'count' in data_obj, f"Data object missing 'count' field: {data_obj.keys()}"
+            assert isinstance(data_obj['count'], int), f"'count' should be an integer, got: {type(data_obj['count'])}"
+            assert data_obj['count'] == len(data_obj['articles']), f"Count {data_obj['count']} doesn't match articles length {len(data_obj['articles'])}"
+            
+            # Verify each article has required fields including 'id'
+            for article in data_obj['articles']:
+                assert 'id' in article, f"Article missing 'id' field: {article.keys()}"
+                assert isinstance(article['id'], int), f"Article 'id' is not an integer: {type(article['id'])}"
+                assert article['id'] > 0, f"Article 'id' should be positive: {article['id']}"
+                
+                required_keys = {'id', 'title', 'summary_truncated', 'published_at', 'source_url'}
+                assert set(article.keys()) == required_keys, f"Article missing required fields. Expected: {required_keys}, Got: {set(article.keys())}"
     
     def test_get_latest_articles_handles_database_error(self) -> None:
         """Test API error handling when database operations fail.
