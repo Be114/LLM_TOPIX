@@ -6,7 +6,7 @@ handling utility functions.
 
 import pytest
 from datetime import datetime, timezone
-from app.utils.date_helpers import format_datetime_to_utc_iso8601, ensure_utc_datetime
+from app.utils import format_datetime_to_utc_iso8601, ensure_utc_datetime
 
 
 class TestDateHelpers:

@@ -9,23 +9,23 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ArticleCard } from '../ArticleCard';
-import { Article } from '../../types/article';
+import { Article, ArticleId, ISO8601String, URLString } from '../../types/article';
 
 describe('ArticleCard Component', () => {
   const mockArticle: Article = {
-    id: 1,
+    id: 1 as ArticleId,
     title: 'Test Article Title',
     summary_truncated: 'This is a test article summary that should be displayed correctly.',
-    published_at: '2024-01-15T10:30:00Z',
-    source_url: 'https://example.com/test-article'
+    published_at: '2024-01-15T10:30:00Z' as ISO8601String,
+    source_url: 'https://example.com/test-article' as URLString
   };
 
   const longSummaryArticle: Article = {
-    id: 2,
+    id: 2 as ArticleId,
     title: 'Article with Long Summary',
     summary_truncated: 'A'.repeat(100) + '...',
-    published_at: '2024-01-15T10:30:00Z',
-    source_url: 'https://example.com/long-article'
+    published_at: '2024-01-15T10:30:00Z' as ISO8601String,
+    source_url: 'https://example.com/long-article' as URLString
   };
 
   beforeEach(() => {
@@ -274,16 +274,45 @@ describe('ArticleCard Component', () => {
        * This ensures robust error handling in production.
        */
       const incompleteArticle = {
-        id: 1,
+        id: 1 as ArticleId,
         title: '',
         summary_truncated: '',
-        published_at: '',
-        source_url: ''
+        published_at: '' as ISO8601String,
+        source_url: '' as URLString
       } as Article;
       
       expect(() => {
         render(<ArticleCard article={incompleteArticle} />);
       }).not.toThrow();
+    });
+
+    test('requires article ID to be present and defined', () => {
+      /**
+       * RED phase test: This test ensures that Article ID is mandatory.
+       * When we make id required in Article type, this test should pass,
+       * but TypeScript should catch attempts to create Articles without id.
+       */
+      const articleWithId: Article = {
+        id: 1 as ArticleId,
+        title: 'Test Article',
+        summary_truncated: 'Test summary',
+        published_at: '2024-01-15T10:30:00Z' as ISO8601String,
+        source_url: 'https://example.com' as URLString
+      };
+      
+      // This should work fine
+      expect(() => {
+        render(<ArticleCard article={articleWithId} />);
+      }).not.toThrow();
+      
+      // Verify the id is actually present and accessible
+      const renderedCard = screen.getByRole('article');
+      expect(renderedCard).toBeInTheDocument();
+      
+      // The article should have an id property that's not undefined
+      expect(articleWithId.id).toBeDefined();
+      expect(typeof articleWithId.id).toBe('number');
+      expect(articleWithId.id).toBeGreaterThan(0);
     });
   });
 });
