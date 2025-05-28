@@ -145,3 +145,103 @@ class TestArticleAPI:
         if response.status_code == 200:
             data = json.loads(response.data)
             assert len(data) <= 5
+    
+    def test_api_returns_published_at_as_utc_iso8601(self) -> None:
+        """Test that published_at dates are always returned with UTC timezone info.
+        
+        This test verifies timezone handling by mocking ArticleService to return
+        naive datetime objects and ensuring the API converts them to UTC ISO8601 format.
+        RED phase test - should fail with current implementation.
+        """
+        with patch('app.services.article_service.ArticleService.get_latest_articles') as mock_service:
+            # Mock service to return articles with naive datetime (no timezone)
+            naive_datetime = datetime(2024, 5, 29, 12, 0, 0)  # No timezone info
+            mock_articles = [
+                {
+                    'id': 1,
+                    'title': 'Test Article',
+                    'summary_truncated': 'Test summary...',
+                    'published_at': naive_datetime,  # Naive datetime
+                    'source_url': 'https://example.com/test'
+                }
+            ]
+            mock_service.return_value = mock_articles
+            
+            response = self.client.get('/api/articles/latest')
+            
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            
+            # Verify response structure
+            assert data['status'] == 'success'
+            assert 'data' in data
+            assert 'articles' in data['data']
+            assert len(data['data']['articles']) == 1
+            
+            article = data['data']['articles'][0]
+            published_at = article['published_at']
+            
+            # The published_at should end with 'Z' (UTC) or '+00:00'
+            # This test should FAIL with current implementation since naive datetime
+            # will be converted to ISO format without timezone info
+            assert published_at.endswith('Z') or published_at.endswith('+00:00'), \
+                f"published_at should have UTC timezone info, got: {published_at}"
+            
+            # Should be parseable as UTC datetime
+            try:
+                # This should parse correctly with timezone info
+                parsed_dt = datetime.fromisoformat(published_at.replace('Z', '+00:00'))
+                assert parsed_dt.tzinfo is not None, \
+                    f"Parsed datetime should have timezone info: {parsed_dt}"
+            except ValueError as e:
+                pytest.fail(f"published_at is not valid ISO8601 format: {published_at}, error: {e}")
+    
+    def test_api_error_response_conforms_to_standard_format(self) -> None:
+        """Test that API error responses conform to CLAUDE.md standard format.
+        
+        This test verifies error responses have the correct structure:
+        {"status": "error", "error": {"code": "ERROR_CODE", "message": "...", "details": {...}}}
+        RED phase test - should verify current error handling is correct.
+        """
+        # Test 404 error format
+        response = self.client.get('/api/articles/nonexistent')
+        assert response.status_code == 404
+        
+        error_data = json.loads(response.data)
+        
+        # Verify top-level error response structure per CLAUDE.md
+        assert 'status' in error_data, f"Error response missing 'status' field: {error_data.keys()}"
+        assert error_data['status'] == 'error', f"Expected status 'error', got: {error_data['status']}"
+        
+        assert 'error' in error_data, f"Error response missing 'error' field: {error_data.keys()}"
+        assert isinstance(error_data['error'], dict), f"'error' should be an object, got: {type(error_data['error'])}"
+        
+        # Verify error object structure
+        error_obj = error_data['error']
+        assert 'code' in error_obj, f"Error object missing 'code' field: {error_obj.keys()}"
+        assert isinstance(error_obj['code'], str), f"'code' should be a string, got: {type(error_obj['code'])}"
+        assert error_obj['code'] == 'RESOURCE_NOT_FOUND', f"Expected error code 'RESOURCE_NOT_FOUND', got: {error_obj['code']}"
+        
+        assert 'message' in error_obj, f"Error object missing 'message' field: {error_obj.keys()}"
+        assert isinstance(error_obj['message'], str), f"'message' should be a string, got: {type(error_obj['message'])}"
+        
+        assert 'details' in error_obj, f"Error object missing 'details' field: {error_obj.keys()}"
+        assert isinstance(error_obj['details'], dict), f"'details' should be an object, got: {type(error_obj['details'])}"
+        
+        # Test database error format with mock
+        with patch('app.services.article_service.ArticleService.get_latest_articles') as mock_service:
+            mock_service.side_effect = DatabaseError("Database connection failed")
+            
+            response = self.client.get('/api/articles/latest')
+            assert response.status_code == 503
+            
+            error_data = json.loads(response.data)
+            
+            # Verify same structure for database errors
+            assert error_data['status'] == 'error'
+            assert 'error' in error_data
+            error_obj = error_data['error']
+            assert error_obj['code'] == 'DATABASE_UNAVAILABLE'
+            assert 'message' in error_obj
+            assert 'details' in error_obj
+            assert isinstance(error_obj['details'], dict)
