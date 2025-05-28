@@ -12,6 +12,7 @@ from typing import Dict, Any
 
 from app.app import create_app
 from app.exceptions import DatabaseError, ApplicationError
+from app.config.constants import TESTING_ENV
 
 
 class TestArticleAPI:
@@ -19,7 +20,7 @@ class TestArticleAPI:
     
     def setup_method(self) -> None:
         """Set up test fixtures before each test method."""
-        self.app = create_app('testing')
+        self.app = create_app(TESTING_ENV)
         self.client = self.app.test_client()
         self.app_context = self.app.app_context()
         self.app_context.push()

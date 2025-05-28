@@ -4,12 +4,14 @@ This module contains the application factory function for creating
 and configuring the Flask application instance.
 """
 
-import os
 from flask import Flask
 from flask_cors import CORS
-from typing import Optional
+from typing import Optional, Tuple, Dict, Any
 
 from app.routes.articles import articles_bp
+from app.config.constants import ALLOWED_ORIGINS, TESTING_ENV
+from app.config.database import get_database_url, get_test_database_url
+from app.utils.response_helpers import create_not_found_response, create_internal_error_response
 
 
 def create_app(config_name: Optional[str] = None) -> Flask:
@@ -24,22 +26,16 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     app = Flask(__name__)
     
     # Load configuration
-    if config_name == 'testing':
+    if config_name == TESTING_ENV:
         app.config['TESTING'] = True
-        app.config['DATABASE_URL'] = os.getenv(
-            'TEST_DATABASE_URL',
-            'postgresql://postgres:password@localhost:5432/llm_topix_test'
-        )
+        app.config['DATABASE_URL'] = get_test_database_url()
     else:
-        app.config['DATABASE_URL'] = os.getenv(
-            'DATABASE_URL',
-            'postgresql://postgres:password@localhost:5432/llm_topix_dev'
-        )
+        app.config['DATABASE_URL'] = get_database_url()
     
     # Enable CORS for frontend integration
     CORS(app, resources={
         r"/api/*": {
-            "origins": ["http://localhost:3000", "http://127.0.0.1:3000"],
+            "origins": ALLOWED_ORIGINS,
             "methods": ["GET", "POST", "PUT", "DELETE"],
             "allow_headers": ["Content-Type", "Authorization"]
         }
@@ -50,16 +46,16 @@ def create_app(config_name: Optional[str] = None) -> Flask:
     
     # Global error handlers
     @app.errorhandler(404)
-    def not_found(error):
-        return {'error': 'Not found', 'message': 'The requested resource was not found'}, 404
+    def not_found(error: Exception) -> Tuple[Dict[str, str], int]:
+        return create_not_found_response()
     
     @app.errorhandler(500)
-    def internal_error(error):
-        return {'error': 'Internal server error', 'message': 'An unexpected error occurred'}, 500
+    def internal_error(error: Exception) -> Tuple[Dict[str, str], int]:
+        return create_internal_error_response()
     
     # Health check endpoint
     @app.route('/health')
-    def health_check():
+    def health_check() -> Tuple[Dict[str, str], int]:
         return {'status': 'healthy', 'service': 'llm-topix-backend'}, 200
     
     return app
