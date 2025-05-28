@@ -1,227 +1,227 @@
 # LLM TOPIX
 
-> A comprehensive web platform for LLM and generative AI news, featuring analysis and insights from major LLM providers (Gemini, ChatGPT, Claude).
+> LLM および生成AI ニュースの包括的なWebプラットフォーム。主要なLLMプロバイダー（Gemini、ChatGPT、Claude）からの分析と洞察を提供します。
 
 [![Built with TDD](https://img.shields.io/badge/Built%20with-TDD-green.svg)](https://en.wikipedia.org/wiki/Test-driven_development)
 [![Code Coverage](https://img.shields.io/badge/Coverage-90%25+-brightgreen.svg)](#testing)
 [![Performance](https://img.shields.io/badge/API%20Response-<50ms-blue.svg)](#performance-requirements)
 [![Accessibility](https://img.shields.io/badge/WCAG-2.1%20AA-blue.svg)](#accessibility)
 
-## 🎯 Project Overview
+## 🎯 プロジェクト概要
 
-LLM TOPIX is designed to be the definitive source for LLM and generative AI news, built with enterprise-grade architecture and strict Test-Driven Development principles. Our platform delivers curated content with performance, accessibility, and security at its core.
+LLM TOPIX は、LLMおよび生成AIニュースの決定版となるように設計されており、エンタープライズグレードのアーキテクチャと厳格なテスト駆動開発の原則で構築されています。私たちのプラットフォームは、パフォーマンス、アクセシビリティ、セキュリティをコアとして、厳選されたコンテンツを提供します。
 
-### Key Features
+### 主な機能
 
-#### 🚀 Phase 1 (Current - MVP)
-- ✅ **Latest Articles Display**: Homepage showcasing the 5 most recent LLM news articles
-- ✅ **Responsive Article Cards**: Clean, accessible cards with title, summary (100 chars), publication date, and source
-- ✅ **Performance Optimized**: Sub-50ms API responses and <16ms frontend interactions
-- ✅ **Accessibility First**: WCAG 2.1 AA compliant with keyboard navigation and screen reader support
-- ✅ **RESTful API**: Robust error handling with standardized response formats
-- ✅ **Complete TDD Implementation**: Comprehensive test coverage following RED → GREEN → REFACTOR methodology
+#### 🚀 フェーズ1（現在 - MVP）
+- ✅ **最新記事表示**: 最新5件のLLMニュース記事を紹介するホームページ
+- ✅ **レスポンシブ記事カード**: タイトル、要約（100文字）、公開日、ソースを含むクリーンでアクセシブルなカード
+- ✅ **パフォーマンス最適化**: 50ms未満のAPIレスポンスと16ms未満のフロントエンドインタラクション
+- ✅ **アクセシビリティファースト**: WCAG 2.1 AA準拠、キーボードナビゲーションとスクリーンリーダーサポート
+- ✅ **RESTful API**: 標準化されたレスポンス形式による堅牢なエラーハンドリング
+- ✅ **完全なTDD実装**: RED → GREEN → REFACTOR手法による包括的なテストカバレッジ
 
-#### 🔮 Phase 2 (Planned)
-- [ ] **Advanced Search & Filtering**: Content discovery with multiple filter criteria
-- [ ] **User Authentication**: Personalized preferences and reading history
-- [ ] **LLM Document Analysis**: AI-powered summarization and insights
-- [ ] **Real-time Updates**: Live news feeds with push notifications
-- [ ] **Content Management System**: Admin interface for content curation
+#### 🔮 フェーズ2（計画中）
+- [ ] **高度な検索とフィルタリング**: 複数のフィルタ条件によるコンテンツ発見
+- [ ] **ユーザー認証**: パーソナライズされた設定と閲覧履歴
+- [ ] **LLM文書分析**: AI駆動の要約と洞察
+- [ ] **リアルタイム更新**: プッシュ通知付きライブニュースフィード
+- [ ] **コンテンツ管理システム**: コンテンツキュレーション用管理インターフェース
 
-## 🛠 Technology Stack
+## 🛠 技術スタック
 
-### Frontend Architecture
-- **Framework**: Next.js 14+ with TypeScript (Strict Mode)
-- **UI Library**: React 18+ with functional components and hooks
-- **Styling**: CSS Modules with performance optimization
-- **Type Safety**: Branded types and comprehensive TypeScript interfaces
-- **Testing**: Jest with React Testing Library
-- **Performance**: React.memo, useMemo, and component optimization
+### フロントエンドアーキテクチャ
+- **フレームワーク**: TypeScript（ストリクトモード）付きNext.js 14+
+- **UIライブラリ**: 関数コンポーネントとhooks付きReact 18+
+- **スタイリング**: パフォーマンス最適化されたCSS Modules
+- **型安全性**: ブランド型と包括的なTypeScriptインターフェース
+- **テスト**: React Testing Library付きJest
+- **パフォーマンス**: React.memo、useMemo、コンポーネント最適化
 
-### Backend Architecture
-- **Framework**: Python Flask with SQLAlchemy ORM
-- **Language**: Python 3.11+ with comprehensive type hints
-- **Database**: PostgreSQL 15+ with optimized indexing
-- **API Design**: RESTful endpoints with standardized error responses
-- **Performance Monitoring**: Built-in execution time tracking
-- **Testing**: PyTest with 90%+ coverage requirement
+### バックエンドアーキテクチャ
+- **フレームワーク**: SQLAlchemy ORM付きPython Flask
+- **言語**: 包括的な型ヒント付きPython 3.11+
+- **データベース**: 最適化されたインデックス付きPostgreSQL 15+
+- **API設計**: 標準化されたエラーレスポンス付きRESTfulエンドポイント
+- **パフォーマンス監視**: 組み込み実行時間追跡
+- **テスト**: 90%以上のカバレッジ要件付きPyTest
 
-### Development & Operations
-- **Containerization**: Docker with multi-service docker-compose setup
-- **Dependency Management**: Poetry (Python), npm (Node.js)
-- **Code Quality**: Black, Flake8, MyPy (Python); ESLint, Prettier (TypeScript)
-- **Version Control**: Git with Conventional Commits specification
-- **CI/CD**: GitHub Actions with automated testing and deployment
+### 開発・運用
+- **コンテナ化**: マルチサービスdocker-compose設定付きDocker
+- **依存関係管理**: Poetry（Python）、npm（Node.js）
+- **コード品質**: Black、Flake8、MyPy（Python）; ESLint、Prettier（TypeScript）
+- **バージョン管理**: Conventional Commits仕様付きGit
+- **CI/CD**: 自動テストとデプロイメント付きGitHub Actions
 
-## 🚀 Quick Start
+## 🚀 クイックスタート
 
-### Prerequisites
+### 前提条件
 
-Ensure you have the following installed:
-- **Docker** and **Docker Compose** (latest stable versions)
-- **Git** for version control
-- **Make** (optional, for convenience scripts)
+以下がインストールされていることを確認してください：
+- **Docker** と **Docker Compose**（最新安定版）
+- バージョン管理用 **Git**
+- **Make**（オプション、便利スクリプト用）
 
-### Local Development Setup
+### ローカル開発環境のセットアップ
 
 ```bash
-# 1. Clone the repository
+# 1. リポジトリをクローン
 git clone https://github.com/Be114/LLM_TOPIX.git
 cd LLM_TOPIX
 
-# 2. Make scripts executable
+# 2. スクリプトを実行可能にする
 chmod +x scripts/*.sh
 
-# 3. Setup development environment (initializes database, installs dependencies)
+# 3. 開発環境をセットアップ（データベースの初期化、依存関係のインストール）
 ./scripts/setup.sh
 
-# 4. Start all services in development mode
+# 4. 開発モードですべてのサービスを開始
 docker-compose up -d
 
-# 5. Verify setup by running tests
+# 5. テストを実行してセットアップを確認
 ./scripts/test.sh
 
-# 6. View logs (optional)
+# 6. ログを表示（オプション）
 docker-compose logs -f
 ```
 
-### Development Scripts
+### 開発スクリプト
 
-Our project includes convenient development scripts for common tasks:
+プロジェクトには一般的なタスク用の便利な開発スクリプトが含まれています：
 
 ```bash
-# Start development environment
+# 開発環境を開始
 ./scripts/setup.sh
 
-# Run all tests (backend + frontend)
+# すべてのテストを実行（バックエンド + フロントエンド）
 ./scripts/test.sh
 
-# Run specific test suites
-./scripts/test.sh backend    # Backend tests only
-./scripts/test.sh frontend   # Frontend tests only
-./scripts/test.sh lint       # Code quality checks
+# 特定のテストスイートを実行
+./scripts/test.sh backend    # バックエンドテストのみ
+./scripts/test.sh frontend   # フロントエンドテストのみ
+./scripts/test.sh lint       # コード品質チェック
 
-# Development server management
-docker-compose up -d         # Start all services
-docker-compose down          # Stop all services
-docker-compose restart      # Restart services
+# 開発サーバー管理
+docker-compose up -d         # すべてのサービスを開始
+docker-compose down          # すべてのサービスを停止
+docker-compose restart      # サービスを再起動
 ```
 
-### Access Points
+### アクセスポイント
 
-Once the setup is complete, access the application at:
+セットアップ完了後、以下でアプリケーションにアクセスできます：
 
-- **🌐 Frontend Application**: http://localhost:3000
-- **⚡ Backend API**: http://localhost:5000
-- **💚 Health Check**: http://localhost:5000/health
-- **📰 Latest Articles API**: http://localhost:5000/api/articles/latest
-- **📊 API Documentation**: http://localhost:5000/docs (if available)
+- **🌐 フロントエンドアプリケーション**: http://localhost:3000
+- **⚡ バックエンドAPI**: http://localhost:5000
+- **💚 ヘルスチェック**: http://localhost:5000/health
+- **📰 最新記事API**: http://localhost:5000/api/articles/latest
+- **📊 APIドキュメント**: http://localhost:5000/docs（利用可能な場合）
 
-## 🏗 Project Architecture
+## 🏗 プロジェクトアーキテクチャ
 
 ```
 LLM_TOPIX/
-├── 🗄️ backend/                    # Flask API Server
+├── 🗄️ backend/                    # Flask APIサーバー
 │   ├── app/
-│   │   ├── 📊 models/              # SQLAlchemy data models
-│   │   │   ├── article.py          # Article model with optimized queries
+│   │   ├── 📊 models/              # SQLAlchemyデータモデル
+│   │   │   ├── article.py          # 最適化されたクエリ付き記事モデル
 │   │   │   └── __init__.py
-│   │   ├── 🔧 services/            # Business logic layer
-│   │   │   ├── article_service.py  # Article operations with performance monitoring
-│   │   │   ├── formatters.py       # Data formatting utilities
+│   │   ├── 🔧 services/            # ビジネスロジック層
+│   │   │   ├── article_service.py  # パフォーマンス監視付き記事操作
+│   │   │   ├── formatters.py       # データフォーマットユーティリティ
 │   │   │   └── __init__.py
-│   │   ├── 🛤️ routes/              # API endpoint definitions
-│   │   │   ├── articles.py         # Article-related endpoints
+│   │   ├── 🛤️ routes/              # APIエンドポイント定義
+│   │   │   ├── articles.py         # 記事関連エンドポイント
 │   │   │   └── __init__.py
-│   │   ├── ⚙️ config/              # Configuration management
-│   │   │   ├── constants.py        # Application constants
-│   │   │   ├── database.py         # Database configuration
+│   │   ├── ⚙️ config/              # 設定管理
+│   │   │   ├── constants.py        # アプリケーション定数
+│   │   │   ├── database.py         # データベース設定
 │   │   │   └── __init__.py
-│   │   ├── 🔧 utils/               # Utility functions
-│   │   │   ├── response_helpers.py # Standardized API responses
+│   │   ├── 🔧 utils/               # ユーティリティ関数
+│   │   │   ├── response_helpers.py # 標準化されたAPIレスポンス
 │   │   │   └── __init__.py
-│   │   ├── exceptions.py           # Custom exception hierarchy
-│   │   └── app.py                  # Application factory
-│   ├── 🧪 tests/                   # Backend test suite
-│   │   ├── test_api_endpoints.py   # Integration tests
-│   │   ├── test_article_service.py # Unit tests
+│   │   ├── exceptions.py           # カスタム例外階層
+│   │   └── app.py                  # アプリケーションファクトリ
+│   ├── 🧪 tests/                   # バックエンドテストスイート
+│   │   ├── test_api_endpoints.py   # 統合テスト
+│   │   ├── test_article_service.py # ユニットテスト
 │   │   └── __init__.py
-│   ├── pyproject.toml              # Poetry configuration
-│   └── Dockerfile                  # Backend container definition
-├── 🎨 frontend/                    # Next.js Application
+│   ├── pyproject.toml              # Poetry設定
+│   └── Dockerfile                  # バックエンドコンテナ定義
+├── 🎨 frontend/                    # Next.jsアプリケーション
 │   ├── src/
-│   │   ├── 🧩 components/          # React components
-│   │   │   ├── ArticleCard.tsx     # Article display component
+│   │   ├── 🧩 components/          # Reactコンポーネント
+│   │   │   ├── ArticleCard.tsx     # 記事表示コンポーネント
 │   │   │   ├── ArticleCard.module.css
-│   │   │   └── __tests__/          # Component tests
+│   │   │   └── __tests__/          # コンポーネントテスト
 │   │   │       └── ArticleCard.test.tsx
-│   │   ├── 📄 pages/               # Next.js pages (auto-routing)
-│   │   ├── 🏷️ types/               # TypeScript type definitions
-│   │   │   └── article.ts          # Article-related types and interfaces
-│   │   └── 🔧 utils/               # Frontend utilities
-│   ├── 🧪 tests/                   # Frontend test configuration
-│   ├── package.json                # npm configuration
-│   ├── next.config.js              # Next.js configuration
-│   ├── tsconfig.json               # TypeScript configuration
-│   ├── jest.setup.js               # Jest test setup
-│   └── Dockerfile                  # Frontend container definition
-├── 🗃️ database/                    # Database schema and migrations
-│   └── init.sql                    # Initial database schema
-├── 📜 scripts/                     # Development and deployment scripts
-│   ├── setup.sh                    # Environment setup
-│   └── test.sh                     # Test execution
-├── 🐳 docker-compose.yml           # Multi-service container orchestration
-├── 📖 CLAUDE.md                    # Development constitution and guidelines
-└── 📝 README.md                    # This file
+│   │   ├── 📄 pages/               # Next.jsページ（自動ルーティング）
+│   │   ├── 🏷️ types/               # TypeScript型定義
+│   │   │   └── article.ts          # 記事関連型とインターフェース
+│   │   └── 🔧 utils/               # フロントエンドユーティリティ
+│   ├── 🧪 tests/                   # フロントエンドテスト設定
+│   ├── package.json                # npm設定
+│   ├── next.config.js              # Next.js設定
+│   ├── tsconfig.json               # TypeScript設定
+│   ├── jest.setup.js               # Jestテストセットアップ
+│   └── Dockerfile                  # フロントエンドコンテナ定義
+├── 🗃️ database/                    # データベーススキーマとマイグレーション
+│   └── init.sql                    # 初期データベーススキーマ
+├── 📜 scripts/                     # 開発・デプロイスクリプト
+│   ├── setup.sh                    # 環境セットアップ
+│   └── test.sh                     # テスト実行
+├── 🐳 docker-compose.yml           # マルチサービスコンテナオーケストレーション
+├── 📖 CLAUDE.md                    # 開発憲章とガイドライン
+└── 📝 README.md                    # このファイル
 ```
 
-## 📡 API Documentation
+## 📡 APIドキュメント
 
-Our API follows RESTful principles with consistent response formats and comprehensive error handling.
+私たちのAPIは、一貫したレスポンス形式と包括的なエラーハンドリングによるRESTful原則に従っています。
 
-### Base Information
-- **Base URL**: `http://localhost:5000/api`
-- **Response Format**: JSON
-- **Authentication**: Not required for current endpoints
-- **Rate Limiting**: Not implemented (Phase 2)
+### 基本情報
+- **ベースURL**: `http://localhost:5000/api`
+- **レスポンス形式**: JSON
+- **認証**: 現在のエンドポイントには不要
+- **レート制限**: 未実装（フェーズ2）
 
-### Core Endpoints
+### コアエンドポイント
 
 #### `GET /api/articles/latest`
-Retrieves the 5 most recent LLM and AI news articles.
+最新5件のLLMおよびAIニュース記事を取得します。
 
-**Parameters**: None
+**パラメータ**: なし
 
-**Success Response** (200):
+**成功レスポンス** (200):
 ```json
 [
   {
     "id": 1,
-    "title": "Breaking: GPT-5 Architecture Revealed",
-    "summary_truncated": "OpenAI unveils revolutionary architecture improvements in their latest model, featuring enhanced reasoning...",
+    "title": "速報: GPT-5アーキテクチャが公開",
+    "summary_truncated": "OpenAIが最新モデルで革命的なアーキテクチャ改善を発表、強化された推論機能を特徴として...",
     "published_at": "2024-01-15T10:30:00Z",
     "source_url": "https://example.com/gpt5-architecture"
   },
   {
     "id": 2,
-    "title": "Google Announces Gemini Ultra 2.0",
-    "summary_truncated": "Google's latest multimodal AI model shows significant improvements in code generation and mathematics...",
+    "title": "GoogleがGemini Ultra 2.0を発表",
+    "summary_truncated": "Googleの最新マルチモーダルAIモデルは、コード生成と数学において大幅な改善を示す...",
     "published_at": "2024-01-14T15:45:00Z",
     "source_url": "https://example.com/gemini-ultra-2"
   }
-  // ... 3 more articles
+  // ... 3つの記事が続く
 ]
 ```
 
-**Error Responses**:
-- **503 Service Unavailable**: Database connection issues
+**エラーレスポンス**:
+- **503 Service Unavailable**: データベース接続問題
   ```json
   {
     "error": "Database service unavailable",
     "message": "Please try again later"
   }
   ```
-- **500 Internal Server Error**: Unexpected server errors
+- **500 Internal Server Error**: 予期しないサーバーエラー
   ```json
   {
     "error": "Internal server error",
@@ -230,9 +230,9 @@ Retrieves the 5 most recent LLM and AI news articles.
   ```
 
 #### `GET /health`
-Health check endpoint for monitoring service availability.
+サービス可用性監視用のヘルスチェックエンドポイント。
 
-**Success Response** (200):
+**成功レスポンス** (200):
 ```json
 {
   "status": "healthy",
@@ -244,147 +244,147 @@ Health check endpoint for monitoring service availability.
 }
 ```
 
-### Response Standards
+### レスポンス標準
 
-All API responses follow consistent formatting:
+すべてのAPIレスポンスは一貫したフォーマットに従います：
 
-- **Success responses**: Direct data or wrapped in appropriate structure
-- **Error responses**: Include error type, user-friendly message, and relevant details
-- **HTTP status codes**: Semantic and consistent usage
-- **Timestamps**: ISO 8601 format (UTC)
-- **Performance**: All endpoints target <50ms response time
+- **成功レスポンス**: 直接データまたは適切な構造にラップ
+- **エラーレスポンス**: エラータイプ、ユーザーフレンドリーなメッセージ、関連詳細を含む
+- **HTTPステータスコード**: セマンティックで一貫した使用
+- **タイムスタンプ**: ISO 8601形式（UTC）
+- **パフォーマンス**: すべてのエンドポイントで50ms未満のレスポンス時間を目標
 
-## 🧪 Testing
+## 🧪 テスト
 
-Our testing strategy follows Test-Driven Development (TDD) principles with comprehensive coverage across all layers.
+私たちのテスト戦略は、すべての層にわたって包括的なカバレッジを持つテスト駆動開発（TDD）原則に従っています。
 
-### Testing Philosophy
+### テスト哲学
 
-We implement the complete TDD cycle:
-1. **🔴 RED**: Write failing tests that describe desired functionality
-2. **🟢 GREEN**: Implement minimal code to make tests pass  
-3. **🔵 REFACTOR**: Improve code quality while maintaining test coverage
+完全なTDDサイクルを実装しています：
+1. **🔴 RED**: 望ましい機能を記述する失敗テストを書く
+2. **🟢 GREEN**: テストを通すための最小限のコードを実装する
+3. **🔵 REFACTOR**: テストカバレッジを維持しながらコード品質を向上させる
 
-### Running Tests
+### テストの実行
 
 ```bash
-# Run complete test suite
+# 完全なテストスイートを実行
 ./scripts/test.sh
 
-# Backend tests only (PyTest)
+# バックエンドテストのみ（PyTest）
 ./scripts/test.sh backend
 
-# Frontend tests only (Jest)
+# フロントエンドテストのみ（Jest）
 ./scripts/test.sh frontend
 
-# Code quality and linting
+# コード品質とリンティング
 ./scripts/test.sh lint
 
-# Coverage report
+# カバレッジレポート
 ./scripts/test.sh coverage
 ```
 
-### Test Coverage Requirements
+### テストカバレッジ要件
 
-- **Minimum Coverage**: 90% for all modules
-- **Unit Tests**: All business logic methods and components
-- **Integration Tests**: API endpoints and database interactions
-- **Performance Tests**: Response time validation (<50ms backend, <16ms frontend)
-- **Accessibility Tests**: WCAG 2.1 AA compliance verification
+- **最小カバレッジ**: すべてのモジュールで90%
+- **ユニットテスト**: すべてのビジネスロジックメソッドとコンポーネント
+- **統合テスト**: APIエンドポイントとデータベースインタラクション
+- **パフォーマンステスト**: レスポンス時間検証（バックエンド50ms未満、フロントエンド16ms未満）
+- **アクセシビリティテスト**: WCAG 2.1 AA準拠検証
 
-### Test Organization
+### テスト構成
 
-#### Backend Testing (PyTest)
+#### バックエンドテスト（PyTest）
 ```python
-# Example test structure
+# テスト構造の例
 class TestArticleService:
     def test_get_latest_articles_returns_five_articles(self):
-        """Verify correct number of articles returned."""
+        """正しい記事数が返されることを確認。"""
         
     def test_get_latest_articles_performance_requirement(self):
-        """Ensure response time under 50ms."""
+        """レスポンス時間が50ms未満であることを確認。"""
         
     def test_get_latest_articles_handles_database_error(self):
-        """Test graceful error handling."""
+        """適切なエラーハンドリングをテスト。"""
 ```
 
-#### Frontend Testing (Jest + React Testing Library)
+#### フロントエンドテスト（Jest + React Testing Library）
 ```typescript
-// Example component test
+// コンポーネントテストの例
 describe('ArticleCard Component', () => {
-  describe('UI Display', () => {
-    test('renders article information correctly', () => {
-      // Test implementation
+  describe('UI表示', () => {
+    test('記事情報が正しく表示される', () => {
+      // テスト実装
     });
   });
   
-  describe('Accessibility', () => {
-    test('has proper ARIA attributes', () => {
-      // Accessibility verification
+  describe('アクセシビリティ', () => {
+    test('適切なARIA属性を持つ', () => {
+      // アクセシビリティ検証
     });
   });
   
-  describe('Performance', () => {
-    test('renders within 16ms budget', () => {
-      // Performance validation
+  describe('パフォーマンス', () => {
+    test('16ms予算内でレンダリングされる', () => {
+      // パフォーマンス検証
     });
   });
 });
 ```
 
-## 🚀 Performance Requirements
+## 🚀 パフォーマンス要件
 
-Our platform is built with performance as a first-class concern:
+私たちのプラットフォームは、パフォーマンスをファーストクラスの関心事として構築されています：
 
-### Backend Performance
-- **🎯 API Response Time**: <50ms for data retrieval endpoints
-- **📊 Database Queries**: <10ms execution time with proper indexing
-- **📈 Monitoring**: Built-in performance tracking with automated warnings
-- **🔍 Profiling**: Execution time logging for all service methods
+### バックエンドパフォーマンス
+- **🎯 APIレスポンス時間**: データ取得エンドポイントで50ms未満
+- **📊 データベースクエリ**: 適切なインデックスによる10ms未満の実行時間
+- **📈 監視**: 自動警告付きの組み込みパフォーマンス追跡
+- **🔍 プロファイリング**: すべてのサービスメソッドの実行時間ログ
 
-### Frontend Performance
-- **⚡ UI Interactions**: <16ms for smooth 60fps interactions
-- **📦 Bundle Size**: <1MB compressed JavaScript
-- **🖼️ Image Optimization**: Lazy loading and responsive images
-- **♿ Accessibility**: Optimized for screen readers and keyboard navigation
+### フロントエンドパフォーマンス
+- **⚡ UIインタラクション**: スムーズな60fpsインタラクションのため16ms未満
+- **📦 バンドルサイズ**: 圧縮JavaScript 1MB未満
+- **🖼️ 画像最適化**: 遅延読み込みとレスポンシブ画像
+- **♿ アクセシビリティ**: スクリーンリーダーとキーボードナビゲーション用に最適化
 
-### Performance Monitoring
+### パフォーマンス監視
 
 ```python
-# Example performance monitoring (backend)
+# パフォーマンス監視の例（バックエンド）
 def get_latest_articles(self) -> List[Dict[str, Any]]:
     start_time = time.time()
     try:
-        # Business logic
+        # ビジネスロジック
         return articles
     finally:
         execution_time = (time.time() - start_time) * 1000
         if execution_time > PERFORMANCE_THRESHOLD_MS:
-            logger.warning(f"Slow operation: {execution_time:.2f}ms")
+            logger.warning(f"遅い操作: {execution_time:.2f}ms")
 ```
 
-## 🔒 Security
+## 🔒 セキュリティ
 
-Security is integrated throughout our architecture with multiple layers of protection:
+セキュリティは、複数の保護層を持つアーキテクチャ全体に統合されています：
 
-### Input Validation
-- **Backend**: Comprehensive validation using Marshmallow schemas
-- **Frontend**: Client-side validation with server-side verification
-- **Database**: Parameterized queries preventing SQL injection
+### 入力検証
+- **バックエンド**: Marshmallowスキーマを使用した包括的検証
+- **フロントエンド**: サーバーサイド検証によるクライアントサイド検証
+- **データベース**: SQLインジェクションを防ぐパラメータ化クエリ
 
-### Data Protection
-- **XSS Prevention**: React's built-in escaping + DOMPurify for HTML content
-- **CSRF Protection**: Token-based validation for state-changing operations
-- **CORS Configuration**: Strict origin and method restrictions
+### データ保護
+- **XSS防止**: HTMLコンテンツ用のReact組み込みエスケープ + DOMPurify
+- **CSRF保護**: 状態変更操作用のトークンベース検証
+- **CORS設定**: 厳格なオリジンとメソッド制限
 
-### Configuration Security
-- **Environment Variables**: All sensitive configuration externalized
-- **Secret Management**: No hardcoded credentials or API keys
-- **Database Security**: Connection encryption and access controls
+### 設定セキュリティ
+- **環境変数**: すべての機密設定を外部化
+- **秘密管理**: ハードコードされた認証情報やAPIキーなし
+- **データベースセキュリティ**: 接続暗号化とアクセス制御
 
-### Security Headers
+### セキュリティヘッダー
 ```python
-# Example security configuration
+# セキュリティ設定の例
 @app.after_request
 def security_headers(response):
     response.headers['X-Content-Type-Options'] = 'nosniff'
@@ -393,29 +393,29 @@ def security_headers(response):
     return response
 ```
 
-## 🤝 Contributing
+## 🤝 貢献
 
-We welcome contributions! Please follow our established development workflow:
+貢献を歓迎します！確立された開発ワークフローに従ってください：
 
-### Development Workflow
+### 開発ワークフロー
 
-1. **📋 Issues**: Start by creating or claiming an issue
-2. **🌿 Branching**: Create feature branch following naming conventions
-3. **🔴 TDD Process**: Write tests first, then implementation
-4. **✅ Quality Checks**: Ensure all tests pass and code quality standards are met
-5. **📝 Pull Request**: Submit PR with detailed description and test coverage
-6. **👀 Review**: Code review by team members
-7. **🚀 Merge**: Merge after approval and CI/CD validation
+1. **📋 Issues**: Issue の作成または取得から開始
+2. **🌿 ブランチ**: 命名規則に従ってフィーチャーブランチを作成
+3. **🔴 TDD プロセス**: テストを最初に書き、次に実装
+4. **✅ 品質チェック**: すべてのテストが通り、コード品質基準を満たすことを確認
+5. **📝 プルリクエスト**: 詳細な説明とテストカバレッジ付きでPRを提出
+6. **👀 レビュー**: チームメンバーによるコードレビュー
+7. **🚀 マージ**: 承認とCI/CD検証後にマージ
 
-### Branch Naming Conventions
-- `feat/description-of-feature` - New functionality
-- `fix/description-of-bug` - Bug fixes
-- `refactor/description-of-refactor` - Code improvements
-- `docs/description-of-docs` - Documentation updates
-- `chore/description-of-chore` - Maintenance tasks
+### ブランチ命名規則
+- `feat/description-of-feature` - 新機能
+- `fix/description-of-bug` - バグ修正
+- `refactor/description-of-refactor` - コード改善
+- `docs/description-of-docs` - ドキュメント更新
+- `chore/description-of-chore` - メンテナンスタスク
 
-### Commit Message Format
-We use [Conventional Commits](https://www.conventionalcommits.org/):
+### コミットメッセージ形式
+[Conventional Commits](https://www.conventionalcommits.org/) を使用します：
 
 ```
 type(scope): description
@@ -425,56 +425,56 @@ type(scope): description
 [optional footer(s)]
 ```
 
-**Examples**:
+**例**:
 ```bash
 feat(articles): add pagination support to latest articles API
 fix(frontend): resolve memory leak in ArticleCard component
 docs(readme): update API documentation with new endpoints
 ```
 
-### Pull Request Checklist
-- [ ] All tests pass (`./scripts/test.sh`)
-- [ ] Code coverage maintains 90%+ threshold
-- [ ] Performance requirements met (<50ms backend, <16ms frontend)
-- [ ] Code follows style guidelines in [CLAUDE.md](CLAUDE.md)
-- [ ] Documentation updated for new features
-- [ ] No new security vulnerabilities introduced
-- [ ] Accessibility requirements maintained (WCAG 2.1 AA)
+### プルリクエストチェックリスト
+- [ ] すべてのテストが通る（`./scripts/test.sh`）
+- [ ] コードカバレッジが90%以上の閾値を維持
+- [ ] パフォーマンス要件を満たす（バックエンド50ms未満、フロントエンド16ms未満）
+- [ ] [CLAUDE.md](CLAUDE.md) のスタイルガイドラインに従う
+- [ ] 新機能のドキュメントを更新
+- [ ] 新しいセキュリティ脆弱性を導入しない
+- [ ] アクセシビリティ要件を維持（WCAG 2.1 AA）
 
-### Development Guidelines
+### 開発ガイドライン
 
-For comprehensive development standards, architectural decisions, and best practices, please refer to our [**Development Constitution (CLAUDE.md)**](CLAUDE.md). This document covers:
+包括的な開発標準、アーキテクチャ決定、ベストプラクティスについては、私たちの [**開発憲章（CLAUDE.md）**](CLAUDE.md) を参照してください。このドキュメントでは以下をカバーしています：
 
-- 📝 Coding standards and naming conventions
-- 🏗️ Architecture and design principles  
-- 🔒 Security guidelines and best practices
-- 🧪 Testing strategies and requirements
-- 📊 Performance optimization techniques
-- 🔄 Git workflow and branch management
-- 📦 Dependency management protocols
+- 📝 コーディング標準と命名規則
+- 🏗️ アーキテクチャと設計原則
+- 🔒 セキュリティガイドラインとベストプラクティス
+- 🧪 テスト戦略と要件
+- 📊 パフォーマンス最適化技術
+- 🔄 Git ワークフローとブランチ管理
+- 📦 依存関係管理プロトコル
 
-## 📄 License
+## 📄 ライセンス
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.
+このプロジェクトは [MIT License](LICENSE) の下でライセンスされています - 詳細はLICENSEファイルを参照してください。
 
-## 🙏 Acknowledgments
+## 🙏 謝辞
 
-- Built with ❤️ using Test-Driven Development principles
-- Powered by the latest in web technology and AI innovation
-- Accessibility guidelines based on WCAG 2.1 AA standards
-- Performance benchmarks inspired by Google Web Vitals
+- テスト駆動開発原則で ❤️ を込めて構築
+- 最新のWeb技術とAIイノベーションによる動力
+- WCAG 2.1 AA基準に基づくアクセシビリティガイドライン
+- Google Web Vitals にインスパイアされたパフォーマンスベンチマーク
 
 ---
 
-**🚀 Ready to explore the future of LLM and AI news?**
+**🚀 LLMとAIニュースの未来を探索する準備はできましたか？**
 
-[Get Started](#quick-start) | [View Live Demo](http://localhost:3000) | [API Docs](#api-documentation) | [Contributing Guidelines](#contributing)
+[始める](#クイックスタート) | [ライブデモを見る](http://localhost:3000) | [APIドキュメント](#apiドキュメント) | [貢献ガイドライン](#貢献)
 
 ---
 
 <div align="center">
 
-**Built with Test-Driven Development principles**  
-*Generated with [Claude Code](https://claude.ai/code)*
+**テスト駆動開発原則で構築**  
+*[Claude Code](https://claude.ai/code) で生成*
 
 </div>
