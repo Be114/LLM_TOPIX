@@ -1,0 +1,116 @@
+/* ArticleCard styles for better performance and maintainability */
+
+.articleCard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  border: 1px solid #e0e0e0;
+}
+
+.articleCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.articleCard:focus {
+  outline: 2px solid #007acc;
+  outline-offset: 2px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 16px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.sourceInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.source {
+  font-size: 0.875rem;
+  color: #666;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.source:hover {
+  color: #007acc;
+  text-decoration: underline;
+}
+
+.date {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.summary {
+  color: #555;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .articleCard {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .sourceInfo {
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .title {
+    font-size: 1.125rem;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .articleCard {
+    transition: none;
+  }
+  
+  .articleCard:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .articleCard {
+    border: 2px solid #000;
+  }
+  
+  .title {
+    color: #000;
+  }
+}

@@ -4,17 +4,21 @@ This module contains the ArticleService class which handles
 article-related business operations including retrieval and formatting.
 """
 
-from datetime import datetime
+import logging
 from typing import List, Dict, Any
 import time
 
 from sqlalchemy import create_engine, desc, select
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.article import Article
 from app.exceptions import DatabaseError, ApplicationError
 from app.config.database import get_database_url
+from app.config.constants import PERFORMANCE_THRESHOLD_MS
+from app.services.formatters import ArticleFormatter
+
+logger = logging.getLogger(__name__)
 
 
 class ArticleService:
@@ -37,14 +41,10 @@ class ArticleService:
         
         This method fetches the most recently published articles,
         limits the result to 5 items, and formats them for frontend consumption.
-        The summary field is truncated to 100 characters with ellipsis if needed.
+        The summary field is truncated based on constants.
         
         Returns:
-            List[Dict[str, Any]]: List of article dictionaries with keys:
-                - title: Article title
-                - summary_truncated: Summary limited to 100 chars + "..."
-                - published_at: Publication datetime
-                - source_url: Original article URL
+            List[Dict[str, Any]]: List of formatted article dictionaries
         
         Raises:
             DatabaseError: When database operations fail
@@ -53,43 +53,42 @@ class ArticleService:
         start_time = time.time()
         
         try:
-            with self.SessionLocal() as session:
-                # Query for latest 5 articles, ordered by published_at descending
-                stmt = (
-                    select(Article.title, Article.summary, Article.published_at, Article.source_url)
-                    .order_by(desc(Article.published_at))
-                    .limit(5)
-                )
-                
-                result = session.execute(stmt)
-                articles = result.fetchall()
-                
-                # Format articles for frontend
-                formatted_articles = []
-                for article in articles:
-                    # Truncate summary to 100 characters with ellipsis
-                    summary = article.summary
-                    if len(summary) > 100:
-                        summary_truncated = summary[:100] + "..."
-                    else:
-                        summary_truncated = summary
-                    
-                    formatted_articles.append({
-                        'title': article.title,
-                        'summary_truncated': summary_truncated,
-                        'published_at': article.published_at,
-                        'source_url': article.source_url
-                    })
-                
-                # Performance check - should complete within 50ms
-                execution_time = (time.time() - start_time) * 1000
-                if execution_time > 50:
-                    # Log warning but don't fail (could add logging here)
-                    pass
-                
-                return formatted_articles
+            articles = self._fetch_articles_from_database()
+            formatted_articles = ArticleFormatter.format_articles_list(articles)
+            self._check_performance(start_time)
+            
+            return formatted_articles
                 
         except SQLAlchemyError as e:
             raise DatabaseError(f"Database query failed: {str(e)}")
         except Exception as e:
             raise ApplicationError(f"Unexpected error in get_latest_articles: {str(e)}")
+    
+    def _fetch_articles_from_database(self) -> List[Any]:
+        """Fetch articles from database with proper query optimization.
+        
+        Returns:
+            List of article database objects
+        """
+        with self.SessionLocal() as session:
+            stmt = (
+                select(Article.title, Article.summary, Article.published_at, Article.source_url)
+                .order_by(desc(Article.published_at))
+                .limit(5)
+            )
+            
+            result = session.execute(stmt)
+            return result.fetchall()
+    
+    def _check_performance(self, start_time: float) -> None:
+        """Check if operation completed within performance threshold.
+        
+        Args:
+            start_time: Operation start time from time.time()
+        """
+        execution_time_ms = (time.time() - start_time) * 1000
+        if execution_time_ms > PERFORMANCE_THRESHOLD_MS:
+            logger.warning(
+                f"get_latest_articles took {execution_time_ms:.2f}ms, "
+                f"exceeds {PERFORMANCE_THRESHOLD_MS}ms threshold"
+            )

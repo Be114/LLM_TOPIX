@@ -3,9 +3,10 @@
 from datetime import datetime
 from typing import Optional
 
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, DateTime, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
+
+from app.config.constants import ARTICLE_TITLE_MAX_LENGTH, ARTICLE_URL_MAX_LENGTH
 
 Base = declarative_base()
 
@@ -15,26 +16,26 @@ class Article(Base):
     
     Attributes:
         id: Primary key identifier
-        title: Article title (max 255 characters)
+        title: Article title (max length defined in constants)
         summary: Article summary/content
         published_at: Publication timestamp
-        source_url: Original article URL
+        source_url: Original article URL (max length defined in constants)
         created_at: Record creation timestamp
         updated_at: Record update timestamp
     """
     
     __tablename__ = 'articles'
     
-    id: int = Column(Integer, primary_key=True, autoincrement=True)
-    title: str = Column(String(255), nullable=False)
+    id: Optional[int] = Column(Integer, primary_key=True, autoincrement=True)
+    title: str = Column(String(ARTICLE_TITLE_MAX_LENGTH), nullable=False)
     summary: str = Column(Text, nullable=False)
     published_at: datetime = Column(DateTime, nullable=False, index=True)
-    source_url: str = Column(String(512), nullable=False, unique=True)
-    created_at: datetime = Column(DateTime, default=datetime.utcnow, nullable=False)
+    source_url: str = Column(String(ARTICLE_URL_MAX_LENGTH), nullable=False, unique=True)
+    created_at: datetime = Column(DateTime, default=lambda: datetime.utcnow(), nullable=False)
     updated_at: datetime = Column(
         DateTime, 
-        default=datetime.utcnow, 
-        onupdate=datetime.utcnow, 
+        default=lambda: datetime.utcnow(), 
+        onupdate=lambda: datetime.utcnow(), 
         nullable=False
     )
     

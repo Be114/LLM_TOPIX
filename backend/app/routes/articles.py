@@ -4,19 +4,42 @@ This module contains Flask routes for article operations,
 including the endpoint for retrieving latest articles.
 """
 
-from flask import Blueprint, jsonify, current_app
+from flask import Blueprint, current_app
 from typing import Dict, Any, Tuple
 
 from app.services.article_service import ArticleService
-from app.exceptions import DatabaseError, ApplicationError, NotFoundError
+from app.exceptions import DatabaseError, ApplicationError
+from app.utils.response_helpers import (
+    create_error_response,
+    create_success_response
+)
 
 
 articles_bp = Blueprint('articles', __name__, url_prefix='/api/articles')
 
 
+def _format_articles_for_response(articles: list[Dict[str, Any]]) -> list[Dict[str, Any]]:
+    """Format articles for JSON response.
+    
+    Args:
+        articles: List of article dictionaries from service
+        
+    Returns:
+        List of formatted article dictionaries with ISO datetime strings
+    """
+    formatted_articles = []
+    for article in articles:
+        formatted_article = article.copy()
+        if 'published_at' in formatted_article and formatted_article['published_at']:
+            formatted_article['published_at'] = formatted_article['published_at'].isoformat()
+        formatted_articles.append(formatted_article)
+    
+    return formatted_articles
+
+
 @articles_bp.route('/latest', methods=['GET'])
 def get_latest_articles() -> Tuple[Dict[str, Any], int]:
-    """Get the latest 5 articles endpoint.
+    """Get the latest articles endpoint.
     
     This endpoint retrieves the most recently published articles
     and returns them in JSON format for frontend consumption.
@@ -25,14 +48,17 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
         Tuple[Dict[str, Any], int]: JSON response and HTTP status code
         
     Response Format:
-        [
-            {
-                "title": "Article Title",
-                "summary_truncated": "Article summary...",
-                "published_at": "2024-01-15T10:30:00Z",
-                "source_url": "https://example.com/article"
-            }
-        ]
+        {
+            "articles": [
+                {
+                    "title": "Article Title",
+                    "summary_truncated": "Article summary...",
+                    "published_at": "2024-01-15T10:30:00Z",
+                    "source_url": "https://example.com/article"
+                }
+            ],
+            "count": 5
+        }
     
     Error Responses:
         503: Database connection/query error
@@ -42,48 +68,53 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
         article_service = ArticleService()
         articles = article_service.get_latest_articles()
         
-        # Convert datetime objects to ISO format strings for JSON serialization
-        for article in articles:
-            if 'published_at' in article and article['published_at']:
-                article['published_at'] = article['published_at'].isoformat()
+        formatted_articles = _format_articles_for_response(articles)
         
-        return jsonify(articles), 200
+        return create_success_response({
+            'articles': formatted_articles,
+            'count': len(formatted_articles)
+        })
         
     except DatabaseError as e:
         current_app.logger.error(f"Database error in get_latest_articles: {e.message}")
-        return jsonify({
-            'error': 'Database service unavailable',
-            'message': 'Please try again later'
-        }), 503
+        return create_error_response(
+            'Database service unavailable',
+            'Please try again later',
+            503
+        )
         
     except ApplicationError as e:
         current_app.logger.error(f"Application error in get_latest_articles: {e.message}")
-        return jsonify({
-            'error': 'Internal server error',
-            'message': 'An unexpected error occurred'
-        }), e.status_code
+        return create_error_response(
+            'Internal server error',
+            'An unexpected error occurred',
+            getattr(e, 'status_code', 500)
+        )
         
     except Exception as e:
         current_app.logger.error(f"Unexpected error in get_latest_articles: {str(e)}")
-        return jsonify({
-            'error': 'Internal server error',
-            'message': 'An unexpected error occurred'
-        }), 500
+        return create_error_response(
+            'Internal server error',
+            'An unexpected error occurred',
+            500
+        )
 
 
 @articles_bp.errorhandler(404)
 def not_found_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 404 errors for articles blueprint."""
-    return jsonify({
-        'error': 'Endpoint not found',
-        'message': 'The requested article endpoint does not exist'
-    }), 404
+    return create_error_response(
+        'Endpoint not found',
+        'The requested article endpoint does not exist',
+        404
+    )
 
 
 @articles_bp.errorhandler(405)
 def method_not_allowed_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 405 errors for articles blueprint."""
-    return jsonify({
-        'error': 'Method not allowed',
-        'message': 'This HTTP method is not allowed for this endpoint'
-    }), 405
+    return create_error_response(
+        'Method not allowed',
+        'This HTTP method is not allowed for this endpoint',
+        405
+    )
