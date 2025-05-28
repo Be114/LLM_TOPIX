@@ -13,6 +13,13 @@ from app.utils.response_helpers import (
     create_error_response,
     create_success_response
 )
+from app.utils.date_helpers import format_datetime_to_utc_iso8601
+from app.config.constants import (
+    ERROR_CODE_DATABASE_UNAVAILABLE,
+    ERROR_CODE_INTERNAL_SERVER_ERROR,
+    ERROR_CODE_RESOURCE_NOT_FOUND,
+    ERROR_CODE_METHOD_NOT_ALLOWED
+)
 
 
 articles_bp = Blueprint('articles', __name__, url_prefix='/api/articles')
@@ -25,13 +32,13 @@ def _format_articles_for_response(articles: list[Dict[str, Any]]) -> list[Dict[s
         articles: List of article dictionaries from service
         
     Returns:
-        List of formatted article dictionaries with ISO datetime strings
+        List of formatted article dictionaries with UTC ISO8601 datetime strings
     """
     formatted_articles = []
     for article in articles:
         formatted_article = article.copy()
         if 'published_at' in formatted_article and formatted_article['published_at']:
-            formatted_article['published_at'] = formatted_article['published_at'].isoformat()
+            formatted_article['published_at'] = format_datetime_to_utc_iso8601(formatted_article['published_at'])
         formatted_articles.append(formatted_article)
     
     return formatted_articles
@@ -80,7 +87,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
     except DatabaseError as e:
         current_app.logger.error(f"Database error in get_latest_articles: {e.message}")
         return create_error_response(
-            'DATABASE_UNAVAILABLE',
+            ERROR_CODE_DATABASE_UNAVAILABLE,
             'Database service is temporarily unavailable. Please try again later.',
             503
         )
@@ -88,7 +95,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
     except ApplicationError as e:
         current_app.logger.error(f"Application error in get_latest_articles: {e.message}")
         return create_error_response(
-            'INTERNAL_SERVER_ERROR',
+            ERROR_CODE_INTERNAL_SERVER_ERROR,
             'An unexpected error occurred',
             getattr(e, 'status_code', 500)
         )
@@ -96,7 +103,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
     except Exception as e:
         current_app.logger.error(f"Unexpected error in get_latest_articles: {str(e)}")
         return create_error_response(
-            'INTERNAL_SERVER_ERROR',
+            ERROR_CODE_INTERNAL_SERVER_ERROR,
             'An unexpected error occurred',
             500
         )
@@ -106,7 +113,7 @@ def get_latest_articles() -> Tuple[Dict[str, Any], int]:
 def not_found_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 404 errors for articles blueprint."""
     return create_error_response(
-        'RESOURCE_NOT_FOUND',
+        ERROR_CODE_RESOURCE_NOT_FOUND,
         'The requested article endpoint does not exist',
         404
     )
@@ -116,7 +123,7 @@ def not_found_error(error: Exception) -> Tuple[Dict[str, str], int]:
 def method_not_allowed_error(error: Exception) -> Tuple[Dict[str, str], int]:
     """Handle 405 errors for articles blueprint."""
     return create_error_response(
-        'METHOD_NOT_ALLOWED',
+        ERROR_CODE_METHOD_NOT_ALLOWED,
         'This HTTP method is not allowed for this endpoint',
         405
     )
